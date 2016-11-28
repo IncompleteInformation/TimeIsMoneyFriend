@@ -68,31 +68,19 @@ def main():
         spreadsheetId=spreadsheetId, range=rangeName).execute()
     values = result.get('values', [])
 
-    # Indices for removal of category names such as 'Pots' and 'Flasks' etc
-    category_indices = [0, 8, 13, 21, 27, 29, 31, 35, 39, 43, 49, 55]
-
     shopping_list = []
-
-    if not values:
-        print('No data found.')
-    else:
-        for i in reversed(category_indices):
-            del values[i]
-        for row in values:
-            # Print column A which corresponds to index 0
-            print(row[0])
-            shopping_list.append(str(row[0]))
-
-    print(shopping_list)
-    shopping_list_ids = [124105,124106,124101]
-    filtered_ah = []
-
     ah = AuctionHouse()
-    data = ah.get_whole_ah()
 
-    # for auction in data['auctions']:
-    #     if auction['item'] in shopping_list_ids:
+    for row in values:
+        item_id = ah.get_item_id(row[0])
+        shopping_list.append((row[0], item_id, None))
+        if item_id != -1:
+            print("%i %s" % (item_id, row[0]))
 
+    # WARNING: slow operation
+    print("fetching ALL AH data now! (feel free to interrupt)")
+    # data = ah.get_whole_ah()
+    filtered_ah = []
 
 
 if __name__ == '__main__':
