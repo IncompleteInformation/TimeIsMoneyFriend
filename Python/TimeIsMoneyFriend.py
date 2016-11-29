@@ -13,6 +13,7 @@ blizzapi = wowapi.API(BLIZZ_KEY)
 item_db = MySQLdb.connect(host="newswire.theunderminejournal.com", db="newsstand")
 cursor = item_db.cursor()
 
+
 class AuctionHouse(object):
     def __init__(self, server=DEFAULT_SERVER):
         self.server = server
@@ -37,7 +38,7 @@ class AuctionHouse(object):
         result = -1
         cursor.execute(sql)
 
-        db_row = cursor.fetchone()  # fetch one result of SQL query (should only return 1 row  anyway)
+        db_row = cursor.fetchone()  # fetch one result of SQL query (should only return 1 row anyway)
 
         if db_row:
             result = db_row[0]  # first column of db is item id
