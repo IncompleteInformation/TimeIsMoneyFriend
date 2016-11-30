@@ -65,24 +65,19 @@ def createShoppingList(sheetsSession, auctionHouse):
         spreadsheetId=sheetsSession.spreadsheetId, range=rangeName).execute()
     values = result.get('values', [])
 
-    shopping_list = []
+    # ('name', id, price)
+    shopping_list = [(row[0], auctionHouse.get_item_id(row[0]), None) for row in values]
 
-    for row in values:
-        item_id = auctionHouse.get_item_id(row[0])
-        shopping_list.append((row[0], item_id, None))
-        if item_id != -1:
-            print("%i %s" % (item_id, row[0]))
+    for item in shopping_list:
+        print("%i %s" % (item[1], item[0]))
 
     return shopping_list
 
 
-def writeData(sheetsSession):
-    # rangeName = 'Manual Info!A2:A'
-    rangeName = 'phptest'
-    values = [
-        ["time","is","money","friend!"],
-        [7,8,9,10,11,12]
-    ]
+def writeData(sheetsSession, data):
+    rangeName = 'Manual Info!B2:B'
+    # rangeName = 'pythontest'
+    values = [data]
     body = {
         'range': rangeName,
         'majorDimension': 'COLUMNS',
@@ -103,20 +98,25 @@ def main():
                     'version=v4')
     service = discovery.build('sheets', 'v4', http=http,
                               discoveryServiceUrl=discoveryUrl)
-
     spreadsheetId = '1nxeLFMeKLHu-EtHpYz4XL0woNEkyK3coXHZ6CSQV9UA'
 
     sheetsSession = SheetsSession(credentials, http, discoveryUrl, service, spreadsheetId)
 
+    # WARNING: slow operation
+    print("fetching ALL AH data now! (slow operation)")
     ah = AuctionHouse()
 
-    # WARNING: slow operation
-    print("fetching ALL AH data now! (feel free to interrupt)")
-    #data = ah.get_whole_ah()
-    filtered_ah = []
-
     shopping_list = createShoppingList(sheetsSession, ah)
-    writeData(sheetsSession)
+    list_prices = []
+    for item in shopping_list:
+        if item[1] == -1:
+            list_prices.append('-')
+        else:
+            list_prices.append(ah.calcStat(item[1]))
+
+    # list_prices = [ah.calcStat(item[1]) if item[1] != -1 else None for item in shopping_list]
+
+    writeData(sheetsSession, list_prices)
 
 if __name__ == '__main__':
     main()
