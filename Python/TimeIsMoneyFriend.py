@@ -62,5 +62,3 @@ class AuctionHouse(object):
 
         return result
 
-    def get_item_listings(self, item_id):
-
