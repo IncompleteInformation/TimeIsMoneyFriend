@@ -3,6 +3,8 @@ import urllib
 import json
 import ConfigParser
 import MySQLdb
+import time
+import os
 
 config = ConfigParser.ConfigParser()
 config.read('./config.ini')
@@ -25,9 +27,21 @@ class AuctionHouse(object):
         response = urllib.urlopen(data_url)
         auction_data = json.load(response)
 
+        self.save_json_to_disk(auction_data)
         print(data_url)
 
         return auction_data
+
+    def save_json_to_disk(self, json_data):
+        timestr = time.strftime("%Y.%m.%d-%H%M%S")
+        dirname = "./Auction Data/%s/" % self.server
+        filename = dirname + ("%s.json" % timestr)
+
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
+
+        with open(filename, 'w') as outfile:
+            json.dump(json_data, outfile, sort_keys=True, indent=4)
 
     def get_item_name(self, item_id):
         item_name = blizzapi.item(item_id)['name']

@@ -108,12 +108,12 @@ def main():
 
     sheetsSession = SheetsSession(credentials, http, discoveryUrl, service, spreadsheetId)
 
+    ah = AuctionHouse()
+
     # WARNING: slow operation
     print("fetching ALL AH data now! (feel free to interrupt)")
     #data = ah.get_whole_ah()
     filtered_ah = []
-
-    ah = AuctionHouse()
 
     shopping_list = createShoppingList(sheetsSession, ah)
     writeData(sheetsSession)
