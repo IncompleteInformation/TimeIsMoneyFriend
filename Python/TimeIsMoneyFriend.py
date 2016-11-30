@@ -20,14 +20,15 @@ class AuctionHouse(object):
     def __init__(self, server=DEFAULT_SERVER):
         self.server = server
 
-    def get_whole_ah(self):
+    def get_whole_ah(self, save_file=True):
         # TODO: cache results & check new queries against last data retrieval
         auction_file = blizzapi.auction_status(self.server)
         data_url = auction_file['files'][0]['url']
         response = urllib.urlopen(data_url)
         auction_data = json.load(response)
 
-        self.save_json_to_disk(auction_data)
+        if save_file:
+            self.save_json_to_disk(auction_data)
         print(data_url)
 
         return auction_data
@@ -60,4 +61,6 @@ class AuctionHouse(object):
             print("\t'%s' not found in item DB. Perhaps not an exact name match?" % item_name)
 
         return result
+
+    def get_item_listings(self, item_id):
 
