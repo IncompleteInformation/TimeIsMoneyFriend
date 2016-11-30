@@ -58,34 +58,40 @@ def get_credentials():
         print('Storing credentials to ' + credential_path)
     return credentials
 
-def getAllItemIds(sheetsSession):
 
+def createShoppingList(sheetsSession, auctionHouse):
     rangeName = 'Manual Info!A2:A'
     result = sheetsSession.service.spreadsheets().values().get(
         spreadsheetId=sheetsSession.spreadsheetId, range=rangeName).execute()
     values = result.get('values', [])
 
     shopping_list = []
-    ah = AuctionHouse()
 
     for row in values:
-        item_id = ah.get_item_id(row[0])
+        item_id = auctionHouse.get_item_id(row[0])
         shopping_list.append((row[0], item_id, None))
         if item_id != -1:
             print("%i %s" % (item_id, row[0]))
 
+    return shopping_list
+
+
 def writeData(sheetsSession):
+    # rangeName = 'Manual Info!A2:A'
     rangeName = 'phptest'
     values = [
-        ["time","is","money","friend!","",""],
+        ["time","is","money","friend!"],
         [7,8,9,10,11,12]
     ]
     body = {
+        'range': rangeName,
+        'majorDimension': 'COLUMNS',
         'values': values
     }
-    result = sheetsSession.service.spreadsheets().values().update(
+    sheetsSession.service.spreadsheets().values().update(
         spreadsheetId=sheetsSession.spreadsheetId, range=rangeName,
         valueInputOption='USER_ENTERED', body=body).execute()
+
 
 def main():
     """ 'Time is Money, Friend!' spreadsheet URL:
@@ -107,7 +113,9 @@ def main():
     #data = ah.get_whole_ah()
     filtered_ah = []
 
-    getAllItemIds(sheetsSession)
+    ah = AuctionHouse()
+
+    shopping_list = createShoppingList(sheetsSession, ah)
     writeData(sheetsSession)
 
 if __name__ == '__main__':
