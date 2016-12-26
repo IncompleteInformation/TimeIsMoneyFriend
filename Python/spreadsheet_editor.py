@@ -104,7 +104,7 @@ def main():
 
     # WARNING: slow operation
     print("fetching ALL AH data now! (slow operation)")
-    ah = AuctionHouse()
+    ah = AuctionHouse(download_data=True)
 
     shopping_list = createShoppingList(sheetsSession, ah)
     list_prices = []
