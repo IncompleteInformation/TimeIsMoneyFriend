@@ -1,6 +1,5 @@
 // TIMF Basic Object Model
 // Notes: Works with Node 7.4
-
 class Item {
   constructor (ID, name) {
     this.itemID       = ID;
@@ -38,6 +37,47 @@ function findRelatedSpells (item, direction, recipes) {
 //Dig until you hit items that are not craftable (or reach a cycle which is yet undetermined)
 function findRawMats (item) {};
 
+//Create and test connection
+let mysql      = require('mysql');
+
+
+
+function buildSpellSet(connection) {
+
+  connection.connect();
+
+  let spellSet = new Set();
+  let query = `SELECT * FROM tblDBCItemReagents`;
+
+  return new Promise((resolve,reject) => {
+
+    connection.query(query, (error, results) => {
+
+      if (error) reject(error);
+
+      for (let result of results){
+        spellSet.add(result.spell);
+      }
+      resolve(spellSet)
+    });
+    connection.end();
+  });
+}
+
+function SQL_CONNECT_AND_WORK(connection) {
+
+  buildSpellSet(connection)
+    .then((res) => console.log(res.values()));
+
+}
+
+let connection = mysql.createConnection({
+  host     : 'newswire.theunderminejournal.com',
+  database : 'newsstand'
+});
+
+SQL_CONNECT_AND_WORK(connection);
+/*
 let r1 = new Recipe(2,"Linguini",5);
 let r2 = new Recipe(4,"Food");
 
@@ -47,3 +87,4 @@ console.log(r2);
 let i1 = new Item(45, "Hogwash Bones");
 
 console.log(i1);
+*/
