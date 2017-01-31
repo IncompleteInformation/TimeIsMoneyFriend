@@ -39,52 +39,41 @@ function findRawMats (item) {};
 
 //Create and test connection
 let mysql      = require('mysql');
-
-
-
-function buildSpellSet(connection) {
-
-  connection.connect();
-
-  let spellSet = new Set();
-  let query = `SELECT * FROM tblDBCItemReagents`;
-
-  return new Promise((resolve,reject) => {
-
-    connection.query(query, (error, results) => {
-
-      if (error) reject(error);
-
-      for (let result of results){
-        spellSet.add(result.spell);
-      }
-      resolve(spellSet)
-    });
-    connection.end();
-  });
-}
-
-function SQL_CONNECT_AND_WORK(connection) {
-
-  buildSpellSet(connection)
-    .then((res) => console.log(res.values()));
-
-}
-
 let connection = mysql.createConnection({
   host     : 'newswire.theunderminejournal.com',
   database : 'newsstand'
 });
 
-SQL_CONNECT_AND_WORK(connection);
-/*
-let r1 = new Recipe(2,"Linguini",5);
-let r2 = new Recipe(4,"Food");
 
-console.log(r1);
-console.log(r2);
+function buildSpellMap() {
+  let spellMap = new Map();
+  let query = `SELECT DISTINCT id,name FROM tblDBCSpell INNER JOIN tblDBCItemReagents ON tblDBCSpell.id=tblDBCItemReagents.spell`;
 
-let i1 = new Item(45, "Hogwash Bones");
+  return new Promise((resolve,reject) => {
+    connection.query(query, (error, results) => {
 
-console.log(i1);
-*/
+      if (error) reject(error);
+
+      for (let result of results){
+        spellMap.set(result.id, result.name);
+      }
+      resolve(spellMap);
+    })
+  })
+}
+
+function SQL_CONNECT_AND_WORK() {
+  connection.connect();
+
+  let spellSet = buildSpellMap()
+    .then(res => console.log(res))
+    .catch(e => console.log(e));
+
+  connection.end();
+}
+
+function resolutionAsParameter(resolved){
+  resolved.then(x => makeMorePromises(x));
+}
+
+SQL_CONNECT_AND_WORK();
