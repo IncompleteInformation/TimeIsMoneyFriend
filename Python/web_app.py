@@ -8,11 +8,6 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return 'Click <a href="/update">here</a> to fetch AH data.'
-
-
-@app.route("/new")
-def new_index():
     return render_template('front_page.html')
 
 
