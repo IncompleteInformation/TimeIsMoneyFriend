@@ -1,6 +1,7 @@
 from __future__ import print_function
 import httplib2
 import os
+import time
 
 from apiclient import discovery
 from oauth2client import client
@@ -22,6 +23,7 @@ SCOPES = 'https://www.googleapis.com/auth/spreadsheets'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Time is Money'
 
+
 class SheetsSession:
     def __init__(self, credentials, http, discoveryUrl, service, spreadsheetId):
         self.credentials = credentials
@@ -29,6 +31,7 @@ class SheetsSession:
         self.discoveryUrl = discoveryUrl
         self.service = service
         self.spreadsheetId = spreadsheetId
+
 
 def get_credentials():
     """Gets valid user credentials from storage.
@@ -76,7 +79,6 @@ def createShoppingList(sheetsSession, auctionHouse):
 
 def writeData(sheetsSession, data):
     rangeName = 'Manual Info!B2:B'
-    # rangeName = 'pythontest'
     values = [data]
     body = {
         'range': rangeName,
@@ -102,10 +104,14 @@ def main():
 
     sheetsSession = SheetsSession(credentials, http, discoveryUrl, service, spreadsheetId)
 
+    start_time = time.time()
     # WARNING: slow operation
     print("fetching ALL AH data now! (slow operation)")
+    # ah = AuctionHouse()
     ah = AuctionHouse(download_data=True)
-
+    end_time = time.time()
+    print("Time taken: " + str(end_time - start_time))
+    start_time = time.time()
     shopping_list = createShoppingList(sheetsSession, ah)
     list_prices = []
     for item in shopping_list:
@@ -115,8 +121,9 @@ def main():
             list_prices.append(ah.calcStat(item[1]))
 
     # list_prices = [ah.calcStat(item[1]) if item[1] != -1 else None for item in shopping_list]
-
+    end_time = time.time()
     writeData(sheetsSession, list_prices)
+    print("Time taken: " + str(end_time - start_time))
 
 if __name__ == '__main__':
     main()
