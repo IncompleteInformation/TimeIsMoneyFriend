@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from datetime import datetime
 import spreadsheet_editor as se
 import TimeIsMoneyFriend
@@ -9,6 +9,11 @@ app = Flask(__name__)
 @app.route("/")
 def index():
     return 'Click <a href="/update">here</a> to fetch AH data.'
+
+
+@app.route("/new")
+def new_index():
+    return render_template('front_page.html')
 
 
 @app.route("/update")
