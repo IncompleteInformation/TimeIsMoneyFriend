@@ -4,3 +4,5 @@ Python/Auction Data/*
 timf/
 *.pyc
 JS/node_modules/
+.idea/*
+Python/.idea*
