@@ -1,0 +1,25 @@
+{
+  "name": "timfjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "scratch.js",
+  "dependencies": {
+    "battlenet-api": "^0.13.0-deprecated",
+    "ini": "git+https://github.com/npm/ini.git",
+    "mysql": "^2.13.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/IncompleteInformation/TimeIsMoneyFriend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IncompleteInformation/TimeIsMoneyFriend/issues"
+  },
+  "homepage": "https://github.com/IncompleteInformation/TimeIsMoneyFriend#readme"
+}

@@ -3,3 +3,4 @@ Python/client_secret.json
 Python/Auction Data/*
 timf/
 *.pyc
+JS/node_modules/
